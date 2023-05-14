@@ -1,7 +1,8 @@
 import sys
 import subprocess
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QComboBox, QDesktopWidget
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QComboBox, QDesktopWidget, QLineEdit
 from PyQt5.QtGui import QPixmap, QFont
+from PyQt5.QtCore import Qt
 
 
 class MyWindow(QMainWindow):
@@ -51,6 +52,11 @@ class MyWindow(QMainWindow):
         cancle_btn = QPushButton("Cancle", self)
         cancle_btn.setGeometry(550, 235, 100, 40)
         cancle_btn.clicked.connect(self.close)
+
+        # To get enter event
+        self.text_input = QLineEdit(self)
+        self.text_input.setGeometry(50, 50, 300, 30)
+        self.text_input.setVisible(False)  # Set input box to be invisible
 
         self.centerWindow()
         
@@ -107,6 +113,12 @@ class MyWindow(QMainWindow):
             scaled_pixmap = pixmap.scaled(50, 50)
         
         logo.setPixmap(scaled_pixmap)
+    
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
+            # Perform the desired action when Enter key is pressed
+            text = self.text_input.text()
+            print(f"Enter key pressed. Input text: {text}")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
