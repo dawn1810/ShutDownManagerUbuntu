@@ -4,6 +4,28 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QCom
 from PyQt5.QtGui import QPixmap, QFont
 from PyQt5.QtCore import Qt
 
+class MyComboBox(QComboBox):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
+            # Handle the "Enter" key event here
+            self.handleEnterKeyPress()
+        else:
+            # Call the base class implementation for other key events
+            super().keyPressEvent(event)
+
+    def handleEnterKeyPress(self):
+        selected_value = self.currentText()
+        if (selected_value == 'Power Off'):
+            self.run_shell_script("shutdown")
+        elif (selected_value == 'Restart'):
+            self.run_shell_script("restart")
+        elif (selected_value == 'Log Out'):
+            self.run_shell_script("logout")
+        elif (selected_value == 'Suspend'):
+            self.run_shell_script("suspend")
 
 class MyWindow(QMainWindow):
     def __init__(self):
@@ -26,7 +48,7 @@ class MyWindow(QMainWindow):
         use_txt.setGeometry(120, 150, 500, 50)
 
         # Creating a QComboBox widget
-        combobox = QComboBox(self)
+        combobox = MyComboBox(self)
         combobox.addItem("Power Off")
         combobox.addItem("Restart")
         combobox.addItem("Log Out")
@@ -34,6 +56,7 @@ class MyWindow(QMainWindow):
         combobox.setGeometry(120, 100, 500, 30) 
         combobox.currentTextChanged.connect(lambda text: self.update_label_text(use_txt, combobox))
         combobox.currentTextChanged.connect(lambda text: self.update_image(logo, combobox))
+        combobox
 
         # Creating a QLabel widget to display the image
         logo = QLabel(self)
@@ -113,12 +136,7 @@ class MyWindow(QMainWindow):
             scaled_pixmap = pixmap.scaled(50, 50)
         
         logo.setPixmap(scaled_pixmap)
-    
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
-            # Perform the desired action when Enter key is pressed
-            text = self.text_input.text()
-            print(f"Enter key pressed. Input text: {text}")
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
