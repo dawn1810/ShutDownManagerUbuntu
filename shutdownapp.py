@@ -8,6 +8,12 @@ class MyComboBox(QComboBox):
     def __init__(self, parent=None):
         super().__init__(parent)
 
+    def run_shell_script(self, action):
+        try:
+            subprocess.run(["./actions.sh", action])
+        except FileNotFoundError:
+            print("The shell script 'actions.sh' was not found.")
+
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
             # Handle the "Enter" key event here
@@ -56,7 +62,6 @@ class MyWindow(QMainWindow):
         combobox.setGeometry(120, 100, 500, 30) 
         combobox.currentTextChanged.connect(lambda text: self.update_label_text(use_txt, combobox))
         combobox.currentTextChanged.connect(lambda text: self.update_image(logo, combobox))
-        combobox
 
         # Creating a QLabel widget to display the image
         logo = QLabel(self)
